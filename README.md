@@ -46,7 +46,7 @@ Rotas:
 
 ## Execussão do Projeto
 
-Como o projeto foi totalmente desenvolvido em javascript e sem pacotes, então basta ter o `node` e executar:
+O projeto foi totalmente desenvolvido em javascript e o único pacotes existente é o `@types/node` para ser de auxílio na escrita. Com isso, basta executar o comando abaixo para iniciar.
 
 ```
 npm start
