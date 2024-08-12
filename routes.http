@@ -1,0 +1,40 @@
+@base_url=http://localhost:3000
+
+@taks_id=
+
+###
+
+# @name create-task
+POST {{base_url}}/tasks
+Content-Type: application/json
+
+{
+    "title": "Fazer algo",
+    "description": "Tenho que fazer algo",
+}
+
+###
+
+# @name delete-task
+DELETE {{base_url}}/tasks/{{taks_id}}
+
+###
+
+# @name list-tasks
+GET {{base_url}}/tasks
+
+###
+
+# @name update-task
+PUT {{base_url}}/tasks/{{taks_id}}
+Content-Type: application/json
+
+{
+    "title": "Fazer algo 123",
+    "description": "Tenho que fazer algo 123",
+}
+
+###
+
+# @name complete-task
+PATCH {{base_url}}/tasks/{{taks_id}}/complete
