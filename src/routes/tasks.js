@@ -1,8 +1,7 @@
 import http from "node:http";
-import { randomUUID } from "node:crypto";
 
-import { Database } from "../database.js";
 import { buildRoutePath } from "../utils/build-route-path.js";
+import { TaskRepository } from "../repositories/task-repository.js";
 
 /**
  * @typedef {Object} Route
@@ -12,7 +11,7 @@ import { buildRoutePath } from "../utils/build-route-path.js";
  * @property {function(http.IncomingMessage, http.ServerResponse): http.ServerResponse} handler
  */
 
-const database = new Database();
+const taskRepository = new TaskRepository();
 
 /**
  * @type {Route[]}
@@ -24,12 +23,8 @@ export const tasksRoutes = [
     handler: (req, res) => {
       const { title, description } = req.query;
 
-      const search = {};
+      const tasks = taskRepository.getTasks({ title, description });
 
-      if (title) search.title = title;
-      if (description) search.description = description;
-
-      const tasks = database.select("tasks", search);
       return res.end(JSON.stringify(tasks));
     },
   },
@@ -37,24 +32,15 @@ export const tasksRoutes = [
     method: "POST",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
-      const { title, description } = req?.body;
+      if (!req.body) res.writeHead(400).end();
+      const { title, description } = req.body;
 
-      if (!req.body || !title || !description) {
-        return res.writeHead(400).end();
+      try {
+        const task = taskRepository.createTask({ title, description });
+        return res.writeHead(201).end(JSON.stringify(task));
+      } catch (err) {
+        return res.writeHead(400).end(JSON.stringify({ err: String(err) }));
       }
-
-      const task = {
-        id: randomUUID(),
-        title,
-        description,
-        completed_at: null,
-        created_at: new Date(),
-        updated_at: null,
-      };
-
-      database.insert("tasks", task);
-
-      return res.writeHead(201).end(JSON.stringify(task));
     },
   },
   {
@@ -62,11 +48,17 @@ export const tasksRoutes = [
     path: buildRoutePath("/tasks/:id"),
     handler: (req, res) => {
       const { id } = req.params;
+
       if (!req.params || !id) {
         return res.writeHead(400).end();
       }
-      const task = database.delete("tasks", id);
-      return res.writeHead(204).end(task);
+
+      try {
+        taskRepository.deleteTaskById(id);
+        return res.writeHead(204).end();
+      } catch (err) {
+        return res.writeHead(400).end(JSON.stringify({ err: String(err) }));
+      }
     },
   },
   {
@@ -80,23 +72,12 @@ export const tasksRoutes = [
 
       const { title, description } = req.body;
 
-      const task = database.findById("tasks", id);
-
-      if (!task)
-        return res.end(
-          JSON.stringify({
-            message: `Registro ${id} inexistente`,
-          })
-        );
-
-      if (title) task.title = title;
-      if (description) task.description = description;
-
-      if (title || description) task.updated_at = new Date();
-
-      database.update("tasks", id, task);
-
-      return res.end(JSON.stringify(task));
+      try {
+        const task = taskRepository.updateTask(id, { title, description });
+        return res.end(JSON.stringify(task));
+      } catch (err) {
+        return res.writeHead(400).end(JSON.stringify({ err: String(err) }));
+      }
     },
   },
   {
@@ -105,24 +86,16 @@ export const tasksRoutes = [
     handler: (req, res) => {
       const { id } = req.params;
 
-      if (!id) return res.writeHead(400).end();
-
-      const task = database.findById("tasks", id);
-
-      if (!task)
-        return res.end(
-          JSON.stringify({
-            message: `Registro ${id} inexistente`,
-          })
-        );
-
-      if (!task.completed_at) {
-        task.completed_at = new Date();
-
-        database.update("tasks", id, task);
+      if (!id) {
+        return res.writeHead(400).end();
       }
 
-      return res.end(JSON.stringify(task));
+      try {
+        const task = taskRepository.completeTask(id);
+        return res.end(JSON.stringify(task));
+      } catch (err) {
+        return res.writeHead(400).end(JSON.stringify({ err: String(err) }));
+      }
     },
   },
 ];
