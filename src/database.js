@@ -29,7 +29,7 @@ export class Database {
   select(table, search) {
     let data = this.#database[table] ?? [];
 
-    if (search) {
+    if (search && Object.keys(search).length) {
       data = data.filter((row) =>
         Object.entries(search).some(([key, value]) =>
           row[key].toLowerCase().includes(value.toLowerCase())
