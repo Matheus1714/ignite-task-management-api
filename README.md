@@ -46,8 +46,20 @@ Rotas:
 
 ## Execussão do Projeto
 
-O projeto foi totalmente desenvolvido em javascript e o único pacotes existente é o `@types/node` para ser de auxílio na escrita. Com isso, basta executar o comando abaixo para iniciar.
+Primeiro instale as dependências:
 
 ```
-npm start
+yarn
+```
+
+Depois execute o projeto da api
+
+```
+yarn start
+```
+
+Para experimentar o load de dados do csv, basta executar o comando:
+
+```
+yarn load
 ```
