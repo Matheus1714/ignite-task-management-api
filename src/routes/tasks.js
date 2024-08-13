@@ -29,8 +29,8 @@ export const tasksRoutes = [
       if (title) search.title = title;
       if (description) search.description = description;
 
-      const tasks = database.select("tasks");
-      return res.end(JSON.stringify(tasks, search));
+      const tasks = database.select("tasks", search);
+      return res.end(JSON.stringify(tasks));
     },
   },
   {
