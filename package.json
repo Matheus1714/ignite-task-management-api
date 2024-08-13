@@ -5,12 +5,16 @@
   "description": "API de gerenciamento de tasks",
   "main": "index.js",
   "scripts": {
-    "start": "node --watch src/index.js"
+    "start": "node --watch src/index.js",
+    "load": "node src/load-data.js"
   },
   "keywords": [],
   "author": "Matheus Silva Martins Mota",
   "license": "ISC",
   "dependencies": {
+    "csv-parse": "^5.5.6"
+  },
+  "devDependencies": {
     "@types/node": "^22.2.0"
   }
 }

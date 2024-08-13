@@ -32,7 +32,9 @@ export const tasksRoutes = [
     method: "POST",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
-      if (!req.body) res.writeHead(400).end();
+      if (!req.body) {
+        res.writeHead(400).end();
+      }
       const { title, description } = req.body;
 
       try {
