@@ -1,6 +1,6 @@
 @base_url=http://localhost:3000
 
-@taks_id=
+@taks_id=c1ed2815-ae54-4dea-bf3d-a6c4b581e048
 
 ###
 
@@ -10,7 +10,7 @@ Content-Type: application/json
 
 {
     "title": "Fazer algo",
-    "description": "Tenho que fazer algo",
+    "description": "Tenho que fazer algo"
 }
 
 ###
@@ -21,7 +21,7 @@ DELETE {{base_url}}/tasks/{{taks_id}}
 ###
 
 # @name list-tasks
-GET {{base_url}}/tasks
+GET {{base_url}}/tasks?title=hello
 
 ###
 
@@ -30,8 +30,8 @@ PUT {{base_url}}/tasks/{{taks_id}}
 Content-Type: application/json
 
 {
-    "title": "Fazer algo 123",
-    "description": "Tenho que fazer algo 123",
+    "title": "Fazer algo teste teste teste teste",
+    "description": "Tenho que fazer algo teste"
 }
 
 ###
